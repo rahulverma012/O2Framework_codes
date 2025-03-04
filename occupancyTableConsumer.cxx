@@ -78,13 +78,13 @@ struct occupancyTableConsumer{
 
     for(auto const& myOccTrack : trackMeanOccs){
       trackCount++;
-      auto track = myOccTrack.track_as<MyTracks>();
+      auto track = myOccTrack.track_as<MyTracks>(); // de-reference to actual track
       float pt = track.pt();
       float eta = track.eta();
       float occ1 = myOccTrack.meanOccPrimUnfm80();
-      float occ2 = myOccTrack.meanOccPrimUnfm80();
-      float occ3 = myOccTrack.meanOccPrimUnfm80();
-      float occ4 = myOccTrack.meanOccPrimUnfm80();
+      float occ2 = myOccTrack.meanOccRobustT0V0PrimUnfm80();
+      float occ3 = myOccTrack.weightMeanOccPrimUnfm80();
+      float occ4 = myOccTrack.weightMeanOccRobustT0V0PrimUnfm80();
 
       if(trackCount < 10){
         LOG(info)<<"DEBUG :: "<<trackCount<<" :: "<<"myOccTrack.trackId() = "<<myOccTrack.trackId()<<" :: track.globalIndex() = "<<track.globalIndex()
