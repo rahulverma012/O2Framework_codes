@@ -1,0 +1,42 @@
+Printing the Errors and Warnings 
+[INFO] Optimised build. O2DEBUG / LOG(debug) / LOGF(debug) / assert statement will not be shown.
+[168602:internal-dpl-aod-global-analysis-file-sink]: [02:16:45][ERROR] Cannot read class info from buffer.
+[168603:occupancy-table-consumer]: [02:17:01][INFO] DEBUG :: df_1 :: DF_2404765322661632
+[168603:occupancy-table-consumer]: [02:17:01][INFO] DEBUG :: df_1 :: BCs.size()           = 52547
+[168603:occupancy-table-consumer]: [02:17:01][INFO] DEBUG :: df_1 :: occTables.size()     = 5
+[168603:occupancy-table-consumer]: [02:17:01][INFO] DEBUG :: df_1 :: collisions.size()    = 245
+[168603:occupancy-table-consumer]: [02:17:01][INFO] DEBUG :: df_1 :: tracks.size()        = 538795
+[168603:occupancy-table-consumer]: [02:17:01][INFO] DEBUG :: df_1 :: tracksQA.size()      = 433179
+[168603:occupancy-table-consumer]: [02:17:01][INFO] DEBUG :: df_1 :: trackMeanOccs.size() = 426112
+[168603:occupancy-table-consumer]: [02:17:01][INFO] DEBUG :: 1 :: myOccTrack.trackId() = 708 :: track.globalIndex() = 708 :: occ1 2119.29 :: occ2 2119.29 :: occ3 2119.29 :: occ4 2119.29
+[168603:occupancy-table-consumer]: [02:17:01][INFO] DEBUG :: 2 :: myOccTrack.trackId() = 709 :: track.globalIndex() = 709 :: occ1 1835 :: occ2 1835 :: occ3 1835 :: occ4 1835
+[168603:occupancy-table-consumer]: [02:17:01][INFO] DEBUG :: 3 :: myOccTrack.trackId() = 710 :: track.globalIndex() = 710 :: occ1 2233 :: occ2 2233 :: occ3 2233 :: occ4 2233
+[168603:occupancy-table-consumer]: [02:17:01][INFO] DEBUG :: 4 :: myOccTrack.trackId() = 711 :: track.globalIndex() = 711 :: occ1 1560.26 :: occ2 1560.26 :: occ3 1560.26 :: occ4 1560.26
+[168603:occupancy-table-consumer]: [02:17:01][INFO] DEBUG :: 5 :: myOccTrack.trackId() = 712 :: track.globalIndex() = 712 :: occ1 2183.25 :: occ2 2183.25 :: occ3 2183.25 :: occ4 2183.25
+[168603:occupancy-table-consumer]: [02:17:01][INFO] DEBUG :: 6 :: myOccTrack.trackId() = 713 :: track.globalIndex() = 713 :: occ1 1656.37 :: occ2 1656.37 :: occ3 1656.37 :: occ4 1656.37
+[168603:occupancy-table-consumer]: [02:17:01][INFO] DEBUG :: 7 :: myOccTrack.trackId() = 714 :: track.globalIndex() = 714 :: occ1 2233 :: occ2 2233 :: occ3 2233 :: occ4 2233
+[168603:occupancy-table-consumer]: [02:17:01][INFO] DEBUG :: 8 :: myOccTrack.trackId() = 715 :: track.globalIndex() = 715 :: occ1 1848.58 :: occ2 1848.58 :: occ3 1848.58 :: occ4 1848.58
+[168603:occupancy-table-consumer]: [02:17:01][INFO] DEBUG :: 9 :: myOccTrack.trackId() = 716 :: track.globalIndex() = 716 :: occ1 1776.5 :: occ2 1776.5 :: occ3 1776.5 :: occ4 1776.5
+[168603:occupancy-table-consumer]: [02:17:05][INFO] DEBUG :: df_2 :: DF_2404765322682112
+[168603:occupancy-table-consumer]: [02:17:05][INFO] DEBUG :: df_2 :: BCs.size()           = 41715
+[168603:occupancy-table-consumer]: [02:17:05][INFO] DEBUG :: df_2 :: occTables.size()     = 4
+[168603:occupancy-table-consumer]: [02:17:05][INFO] DEBUG :: df_2 :: collisions.size()    = 201
+[168603:occupancy-table-consumer]: [02:17:05][INFO] DEBUG :: df_2 :: tracks.size()        = 542496
+[168603:occupancy-table-consumer]: [02:17:05][INFO] DEBUG :: df_2 :: tracksQA.size()      = 436243
+[168603:occupancy-table-consumer]: [02:17:05][INFO] DEBUG :: df_2 :: trackMeanOccs.size() = 428970
+[168603:occupancy-table-consumer]: [02:17:09][INFO] DEBUG :: df_3 :: DF_2404765322688832
+[168603:occupancy-table-consumer]: [02:17:09][INFO] DEBUG :: df_3 :: BCs.size()           = 42069
+[168603:occupancy-table-consumer]: [02:17:09][INFO] DEBUG :: df_3 :: occTables.size()     = 4
+[168603:occupancy-table-consumer]: [02:17:09][INFO] DEBUG :: df_3 :: collisions.size()    = 218
+[168603:occupancy-table-consumer]: [02:17:09][INFO] DEBUG :: df_3 :: tracks.size()        = 537731
+[168603:occupancy-table-consumer]: [02:17:09][INFO] DEBUG :: df_3 :: tracksQA.size()      = 434452
+[168603:occupancy-table-consumer]: [02:17:09][INFO] DEBUG :: df_3 :: trackMeanOccs.size() = 424536
+[168603:occupancy-table-consumer]: [02:17:12][INFO] DEBUG :: df_4 :: DF_2404765322708832
+[168603:occupancy-table-consumer]: [02:17:12][INFO] DEBUG :: df_4 :: BCs.size()           = 41922
+[168603:occupancy-table-consumer]: [02:17:12][INFO] DEBUG :: df_4 :: occTables.size()     = 4
+[168603:occupancy-table-consumer]: [02:17:12][INFO] DEBUG :: df_4 :: collisions.size()    = 218
+[168603:occupancy-table-consumer]: [02:17:12][INFO] DEBUG :: df_4 :: tracks.size()        = 456381
+[168603:occupancy-table-consumer]: [02:17:12][INFO] DEBUG :: df_4 :: tracksQA.size()      = 367065
+[168603:occupancy-table-consumer]: [02:17:12][INFO] DEBUG :: df_4 :: trackMeanOccs.size() = 361518
+Wed Mar 5 02:15:35 AM IST 2025
+Wed Mar  5 02:17:12 AM IST 2025
