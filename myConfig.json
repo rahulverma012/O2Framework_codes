@@ -1,0 +1,95 @@
+{
+    "internal-dpl-clock": "",
+    "internal-dpl-aod-reader": {
+        "time-limit": "0",
+        "orbit-offset-enumeration": "0",
+        "orbit-multiplier-enumeration": "0",
+        "start-value-enumeration": "0",
+        "end-value-enumeration": "-1",
+        "step-value-enumeration": "1"
+    },
+    "bc-selection-task": {
+        "processRun2": "false",
+        "processRun3": "true"
+    },
+    "event-selection-task": {
+        "syst": "PbPb",
+        "processRun2": "false",
+        "processRun3": "true"
+    },
+    "track-propagation": {
+        "processStandard": "false",
+        "processCovariance": "true"
+    },
+    "multiplicity-table": {
+        "enabledTables": {
+            "labels_rows": [
+                "FV0Mults",
+                "FT0Mults",
+                "FDDMults",
+                "ZDCMults",
+                "TrackletMults",
+                "TPCMults",
+                "PVMults",
+                "MultsExtra",
+                "MultSelections",
+                "FV0MultZeqs",
+                "FT0MultZeqs",
+                "FDDMultZeqs",
+                "PVMultZeqs",
+                "MultMCExtras"
+            ],
+            "labels_cols": [
+                "Enable"
+            ],
+            "values": [
+                ["-1"],
+                ["-1"],
+                ["-1"],
+                ["-1"],
+                ["-1"],
+                ["-1"],
+                ["-1"],
+                ["1"] ,
+                ["-1"],
+                ["-1"],
+                ["-1"],
+                ["-1"],
+                ["-1"],
+                ["-1"]
+            ]
+        },
+        "processGlobalTrackingCounters": "false"
+    },
+    "occupancy-table-producer": {
+        "customOrbitOffset": "0",
+        "grouping": "80",
+        "buildOccIndexTable": "true",
+        "buildBCTFinfoTable": "true",
+        "buildOccsBCsList": "true",
+        "buildOccsDet": "true",
+        "buildOccsTrackMult": "true",
+        "buildOccsMultExtra": "true",
+        "buildOccsRobust": "true",
+        "buildOccsMeanDet": "true",
+        "buildOccsMeanTrkMult": "true",
+        "buildOccsMnMultExtra": "true",
+        "buildOccsMeanRobust": "true"
+    },
+    "track-mean-occ-table-producer": {
+        "customOrbitOffset": "0",
+        "buildTrackMeanOccs1": "true",
+        "buildTrackMeanOccs2": "true",
+        "buildTrackMeanOccs3": "true",
+        "buildTrackMeanOccs4": "true",
+        "buildTrackMeanOccs5": "true",
+        "buildTrackMeanOccs6": "true",
+        "buildTrackMeanOccs7": "true",
+        "buildTrackMeanOccs8": "true",
+        "fillQA1": "true",
+        "fillQA2": "true"
+    },
+    "internal-dpl-aod-spawner": "",
+    "internal-dpl-aod-global-analysis-file-sink": "",
+    "internal-dpl-injected-dummy-sink": ""
+}
