@@ -115,19 +115,30 @@ struct occupancyTableConsumer{
     int trackCount2 = 0;    
     //Step 02-create a reusable iterator object
     auto myOccTrack = trackMeanOccs.begin();
+    
+    float occ1 = -9999999;
+    float occ2 = -9999999;
+    float occ3 = -9999999;
+    float occ4 = -9999999;
 
     for(auto const& track : tracks){
 
       int occTableIndex = findTrackInList(track.globalIndex(), indexList); //Step 03- Check if track is in index list or not 
-      if( occTableIndex == -1){ continue; }
-      else { myOccTrack = trackMeanOccs.iteratorAt(occTableIndex); } //Step 04- Get object containing mean occupancies for this track
+      if( occTableIndex == -1){
+        occ1 = -9999999;
+        occ2 = -9999999;
+        occ3 = -9999999;
+        occ4 = -9999999;                              
+      }
+      else { myOccTrack = trackMeanOccs.iteratorAt(occTableIndex); 
+        occ1 = myOccTrack.meanOccPrimUnfm80();
+        occ2 = myOccTrack.meanOccRobustT0V0PrimUnfm80();
+        occ3 = myOccTrack.weightMeanOccPrimUnfm80();
+        occ4 = myOccTrack.weightMeanOccRobustT0V0PrimUnfm80();   
+      } //Step 04- Get object containing mean occupancies for this track
 
       float pt = track.pt();
       float eta = track.eta();
-      float occ1 = myOccTrack.meanOccPrimUnfm80();
-      float occ2 = myOccTrack.meanOccRobustT0V0PrimUnfm80();
-      float occ3 = myOccTrack.weightMeanOccPrimUnfm80();
-      float occ4 = myOccTrack.weightMeanOccRobustT0V0PrimUnfm80();
 
       if(trackCount2 < 10){
         trackCount2++;
