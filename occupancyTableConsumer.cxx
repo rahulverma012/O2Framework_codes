@@ -47,6 +47,17 @@ int32_t nBCsPerOrbit = o2::constants::lhc::LHCMaxBunches;
 
 struct occupancyTableConsumer{
 
+  template<typename T>
+  int64_t findTrackInList(const int64_t& target, const T& sortedArray){
+    auto it = std::lower_bound(sortedArray.begin(), sortedArray.end(), target);
+    if (it != sortedArray.end() && *it == target) {
+      int index = std::distance(sortedArray.begin(), it);
+      return index;
+    } else {
+      return -1; 
+    }
+  }
+  
   using MyBCTable    = soa::Join<aod::BCsWithTimestamps,aod::OccIndexTable>;
   using MyCollisions = aod::Collisions; 
   using MyTracks     = soa::Join<aod::Tracks, aod::TracksExtra, aod::TracksDCA>;
@@ -87,11 +98,41 @@ struct occupancyTableConsumer{
       float occ4 = myOccTrack.weightMeanOccRobustT0V0PrimUnfm80();
 
       if(trackCount < 10){
-        LOG(info)<<"DEBUG :: "<<trackCount<<" :: "<<"myOccTrack.trackId() = "<<myOccTrack.trackId()<<" :: track.globalIndex() = "<<track.globalIndex()
+        LOG(info)<<"DEBUG 1:: "<<trackCount<<" :: "<<"myOccTrack.trackId() = "<<myOccTrack.trackId()<<" :: track.globalIndex() = "<<track.globalIndex()
                  <<" :: occ1 "<<occ1
                  <<" :: occ2 "<<occ2
                  <<" :: occ3 "<<occ3
-                 <<" :: occ4 "<<occ4;    
+                 <<" :: occ4 "<<occ4;
+      }
+    }
+
+    //Step 01-Build Index List ;
+    std::vector<int64_t> indexList;
+    for(auto const& myOccTrack : trackMeanOccs){
+      indexList.push_back(myOccTrack.trackId());
+    }
+
+    int trackCount2 = 0;    
+    //Step 02-create a reusable iterator object
+    auto myOccTrack = trackMeanOccs.begin();
+
+    for(auto const& track : tracks){
+
+      int occTableIndex = findTrackInList(track.globalIndex(), indexList); //Step 03- Check if track is in index list or not 
+      if( occTableIndex == -1){ continue; }
+      else { myOccTrack = trackMeanOccs.iteratorAt(occTableIndex); } //Step 04- Get object containing mean occupancies for this track
+
+      float pt = track.pt();
+      float eta = track.eta();
+      float occ1 = myOccTrack.meanOccPrimUnfm80();
+      float occ2 = myOccTrack.meanOccRobustT0V0PrimUnfm80();
+      float occ3 = myOccTrack.weightMeanOccPrimUnfm80();
+      float occ4 = myOccTrack.weightMeanOccRobustT0V0PrimUnfm80();
+
+      if(trackCount2 < 10){
+        trackCount2++;
+        LOG(info)<<"DEBUG 2:: "<<trackCount2<<" :: track.globalIndex() = "<<track.globalIndex()
+                                           <<" :: myOccTrack.trackId() = "<<myOccTrack.trackId();
       }
     }
   }//Process function ends
