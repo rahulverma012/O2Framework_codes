@@ -58,7 +58,8 @@ struct occupancyTableConsumer{
     }
   }
   
-  using MyBCTable    = soa::Join<aod::BCsWithTimestamps,aod::OccIndexTable>;
+  // using MyBCTable = soa::Join<aod::BCsWithTimestamps, aod::OccIndexTable, aod::BCTFinfoTable>;
+  using MyBCTable    = soa::Join<aod::BCsWithTimestamps, aod::BCTFinfoTable >;
   using MyCollisions = aod::Collisions; 
   using MyTracks     = soa::Join<aod::Tracks, aod::TracksExtra, aod::TracksDCA>;
   using MyTracksQA = aod::TracksQA_002;
@@ -68,6 +69,7 @@ struct occupancyTableConsumer{
                                                          aod::TrackMeanOccs5, aod::TrackMeanOccs8>;
   int dfCount = 0;
   int trackCount = 0;
+  int bcCount = 0 ;
   void process(o2::aod::Origins const& Origins,
                MyBCTable const& BCs,
                MyCollisions const& collisions,
@@ -76,7 +78,7 @@ struct occupancyTableConsumer{
                MyOccsTable const& occTables,
                MyTrackMeanOccs const& trackMeanOccs
               )
-  {  
+  { 
     dfCount++;
     // if(dfCount > 10) {return;}
     LOG(info)<<"DEBUG :: df_"<<dfCount<<" :: DF_"<<Origins.iteratorAt(0).dataframeID();
@@ -86,6 +88,15 @@ struct occupancyTableConsumer{
     LOG(info)<<"DEBUG :: df_"<<dfCount<<" :: tracks.size()        = "<<tracks.size();
     LOG(info)<<"DEBUG :: df_"<<dfCount<<" :: tracksQA.size()      = "<<tracksQA.size();
     LOG(info)<<"DEBUG :: df_"<<dfCount<<" :: trackMeanOccs.size() = "<<trackMeanOccs.size();
+
+    for(auto const& bc : BCs){
+      if( bcCount % 10000 == 0){
+      LOG(info)<<"DEBUG :: df_"<<dfCount<<" :: bc.gloablIndex() = "<<bc.globalIndex()
+                                        <<" :: bc.tfId() = "<<bc.tfId()
+                                        <<" :: bc.bcInTF() = "<<bc.bcInTF();
+      }
+      bcCount++;
+    }
 
     for(auto const& myOccTrack : trackMeanOccs){
       trackCount++;
@@ -98,11 +109,11 @@ struct occupancyTableConsumer{
       float occ4 = myOccTrack.weightMeanOccRobustT0V0PrimUnfm80();
 
       if(trackCount < 10){
-        LOG(info)<<"DEBUG 1:: "<<trackCount<<" :: "<<"myOccTrack.trackId() = "<<myOccTrack.trackId()<<" :: track.globalIndex() = "<<track.globalIndex()
-                 <<" :: occ1 "<<occ1
-                 <<" :: occ2 "<<occ2
-                 <<" :: occ3 "<<occ3
-                 <<" :: occ4 "<<occ4;
+        // LOG(info)<<"DEBUG 1:: "<<trackCount<<" :: "<<"myOccTrack.trackId() = "<<myOccTrack.trackId()<<" :: track.globalIndex() = "<<track.globalIndex()
+        //          <<" :: occ1 "<<occ1
+        //          <<" :: occ2 "<<occ2
+        //          <<" :: occ3 "<<occ3
+        //          <<" :: occ4 "<<occ4;
       }
     }
 
@@ -121,8 +132,10 @@ struct occupancyTableConsumer{
     float occ3 = -9999999;
     float occ4 = -9999999;
 
-    for(auto const& track : tracks){
+    int trackWithoutCollision = 0;
+    int trackWithCollisionButNoOccs = 0;
 
+    for(auto const& track : tracks){
       int occTableIndex = findTrackInList(track.globalIndex(), indexList); //Step 03- Check if track is in index list or not 
       if( occTableIndex == -1){
         occ1 = -9999999;
@@ -142,10 +155,22 @@ struct occupancyTableConsumer{
 
       if(trackCount2 < 10){
         trackCount2++;
-        LOG(info)<<"DEBUG 2:: "<<trackCount2<<" :: track.globalIndex() = "<<track.globalIndex()
-                                           <<" :: myOccTrack.trackId() = "<<myOccTrack.trackId();
+        // LOG(info)<<"DEBUG 2:: "<<trackCount2<<" :: track.globalIndex() = "<<track.globalIndex()
+        //                                    <<" :: myOccTrack.trackId() = "<<myOccTrack.trackId();
       }
+
+      if(track.collisionId() < 0){
+        trackWithoutCollision++;
+        // LOG(info)<<"DEBUG 3:: occTableIndex = "<<occTableIndex<<" :: track.collisionId() = "<<track.collisionId()<<" :: track.globalIndex() = "<<track.globalIndex();
+      }
+      if(track.collisionId() >= 0 && occTableIndex == -1){trackWithCollisionButNoOccs++;}
+        
     }
+    LOG(info)<<"DEBUG :: trackWithoutCollision       = "<<trackWithoutCollision;
+    LOG(info)<<"DEBUG :: trackWithCollisionButNoOccs = "<<trackWithCollisionButNoOccs;
+    LOG(info)<<"DEBUG :: total Tracks = "<<tracks.size()<<" :: "<<(trackWithCollisionButNoOccs+trackWithoutCollision+trackMeanOccs.size());
+    LOG(info)<<"DEBUG :: ";
+
   }//Process function ends
 
 };
