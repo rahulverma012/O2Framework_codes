@@ -61,26 +61,98 @@ struct occupancyTableConsumer{
   // using MyBCTable = soa::Join<aod::BCsWithTimestamps, aod::OccIndexTable, aod::BCTFinfoTable>;
   using MyBCTable    = soa::Join<aod::BCsWithTimestamps, aod::BCTFinfoTable >;
   using MyCollisions = aod::Collisions; 
-  using MyTracks     = soa::Join<aod::Tracks, aod::TracksExtra, aod::TracksDCA>;
-  using MyTracksQA = aod::TracksQA_002;
-  using MyOccsTable  = soa::Join<aod::OccsBCsList, aod::OccsDet, aod::OccsTrackMult, aod::OccsMultExtra, aod::OccsRobust,
-                                                  aod::OccsMeanDet, aod::OccsMeanTrkMult, aod::OccsMnMultExtra, aod::OccsMeanRobust>;
-  using MyTrackMeanOccs = soa::Join<aod::TrackMeanOccs0, aod::TrackMeanOccs1, aod::TrackMeanOccs4,
-                                                         aod::TrackMeanOccs5, aod::TrackMeanOccs8>;
+  using MyTracks     = soa::Join<aod::Tracks, aod::TrackToTmo, aod::TrackToTracksQA, aod::TracksExtra, aod::TracksDCA>;
+  using MyTracksQA   = soa::Join<aod::TracksQAVersion, aod::TrackQAToTmo>;
+  // using MyOccsTable  = soa::Join<aod::OccsBCsList, aod::OccsDet, aod::OccsTrackMult, aod::OccsMultExtra, aod::OccsRobust,
+  //                                                 aod::OccsMeanDet, aod::OccsMeanTrkMult, aod::OccsMnMultExtra, aod::OccsMeanRobust>;
+  // using MyTrackMeanOccs = soa::Join<aod::TrackMeanOccs0, aod::TrackMeanOccs1, aod::TrackMeanOccs4,
+  //                                                        aod::TrackMeanOccs5, aod::TrackMeanOccs8>;
+
+  using MyTrackMeanOccs = soa::Join<aod::TmoTrackIds, aod::TmoToTrackQA, aod::TmoPrim,  aod::TmoT0V0,  aod::TmoRT0V0Prim, aod::TwmoRT0V0Prim> ; 
+  // using MyTmoTable = aod::TmoTrackId;
+
   int dfCount = 0;
   int trackCount = 0;
   int bcCount = 0 ;
-  void process(o2::aod::Origins const& Origins,
-               MyBCTable const& BCs,
-               MyCollisions const& collisions,
-               MyTracks const& tracks,
-               MyTracksQA const& tracksQA,
-               MyOccsTable const& occTables,
-               MyTrackMeanOccs const& trackMeanOccs
+  int checkCounter = 0;
+
+  void process(o2::aod::Origins const& Origins
+               ,MyBCTable const& BCs
+               ,MyCollisions const& collisions
+               ,MyTrackMeanOccs const& tmoTable
+               ,MyTracks const& tracks
+               ,MyTracksQA const& tracksQA /*,
+              //  ,MyOccsTable const& occTables,
+              //  ,MyTrackMeanOccs const& trackMeanOccs*/
               )
   { 
+    auto bc = collisions.begin().bc_as<MyBCTable>();
+    LOG(info)<<"DEBUG :: df_"<<dfCount<<" :: bc = "<<bc.tfId();
     dfCount++;
-    // if(dfCount > 10) {return;}
+
+    //TMO to other table dereferencing (aod::tracks, aod::TracksQAVersion)
+    checkCounter=0;
+    for( const auto& trackMeanOccs : tmoTable){
+      checkCounter++;
+      if(checkCounter < 10){
+        LOG(info)<<"DEBUG :: trackMeanOccs.globalIndex() = "<<trackMeanOccs.globalIndex()<<" :: trackMeanOccs.trackId() = "<<trackMeanOccs.trackId()<<" :: trackMeanOccs.trackQAId() = "<<trackMeanOccs.trackQAId();
+      }
+      // if(trackMeanOccs.trackId() != -1){
+        auto track_From_TrackMeanOccTable = trackMeanOccs.track_as<MyTracks>();//Dereferencing TrackMeanOccupancy ==> aod::Tracks
+        if(trackMeanOccs.trackId() !=  track_From_TrackMeanOccTable.globalIndex()) {
+          LOG(info)<<"DEBUG :: ERROR ERROR ERROR :: trackMeanOccs.trackId() !=  track_From_TrackMeanOccTable.globalIndex() :: "<<trackMeanOccs.trackId()<<" !=  "<<track_From_TrackMeanOccTable.globalIndex();
+        }
+      // }
+      // if(trackMeanOccs.trackQAId() != -1){
+        auto trackQA_From_TrackMeanOccTable = trackMeanOccs.trackQA_as<MyTracksQA>();//Dereferencing TrackMeanOccupancy ==> aod::TracksQAVersion
+        if(trackMeanOccs.trackId() != trackQA_From_TrackMeanOccTable.trackId()){
+          LOG(info)<<"DEBUG :: ERROR ERROR ERROR :: trackMeanOccs.trackId() !=  trackQA_From_TrackMeanOccTable.trackId() :: "<<trackMeanOccs.trackId()<<" !=  "<<trackQA_From_TrackMeanOccTable.trackId(); //this table is bad
+        }
+      // }
+    }
+
+    //track to other table dereferencing (aod::TracksQAVersion, aod::TmoTrackId)
+    checkCounter = 0;
+    for( const auto& track : tracks){
+      checkCounter++;
+      if(checkCounter < 10){
+        LOG(info)<<"DEBUG :: track.globalIndex() = "<<track.globalIndex()<<" :: track.tmoId() = "<<track.tmoId()<<" :: trackMeanOccs.trackQAId() = "<<track.trackQAId();
+      }
+      if(track.tmoId() != -1){
+        auto tmo_From_Tracks = track.tmo_as<MyTrackMeanOccs>();//Dereferencing aod::Tracks ==> TrackMeanOccupancy
+        if(track.globalIndex() !=  tmo_From_Tracks.trackId()) {
+          LOG(info)<<"DEBUG :: ERROR ERROR ERROR :: track.globalIndex() !=  tmo_From_Tracks.trackId() :: "<<track.globalIndex()<<" !=  "<<tmo_From_Tracks.trackId(); //this is also failing
+        }
+      }
+      if(track.trackQAId() != -1){
+        auto trackQA_From_Tracks = track.trackQA_as<MyTracksQA>();//Dereferencing aod::Tracks ==> aod::TracksQAVersion
+        if(track.globalIndex() != trackQA_From_Tracks.trackId()){
+          LOG(info)<<"DEBUG :: ERROR ERROR ERROR :: track.globalIndex() != trackQA_From_Tracks.trackId() :: "<<track.globalIndex()<<" !=  "<<trackQA_From_Tracks.trackId(); //this is also failing 
+        }
+      }
+    }
+
+    //trackQA to other table dereferencing (aod::Tracks, aod::TmoTrackId)
+    checkCounter = 0;
+    for( const auto& trackQA : tracksQA){
+      checkCounter++;
+      if(checkCounter < 10){
+        LOG(info)<<"DEBUG :: trackQA.globalIndex = "<<trackQA.globalIndex()<<" :: trackQA.trackId = "<<trackQA.trackId()<<" :::: trackQA.tmoId = "<<trackQA.tmoId();
+      }
+        if(trackQA.tmoId() != -1){
+          auto tmo_From_TracksQA = trackQA.tmo_as<MyTrackMeanOccs>();//Dereferencing aod::TracksQAVersion ==> TrackMeanOccupancy
+          if(trackQA.trackId() !=  tmo_From_TracksQA.trackId()) {
+            LOG(info)<<"DEBUG :: ERROR ERROR ERROR :: trackQA.trackId() !=  tmo_From_TracksQA.trackId() :: "<<trackQA.trackId()<<" !=  "<<tmo_From_TracksQA.trackId();
+          }
+        }
+        if(trackQA.trackId() != -1){
+          auto track_From_TracksQA = trackQA.track_as<MyTracks>();//Dereferencing aod::TracksQAVersion ==> aod::Tracks
+          if(trackQA.trackId() != track_From_TracksQA.globalIndex()){
+            LOG(info)<<"DEBUG :: ERROR ERROR ERROR :: trackQA.trackId() != track_From_TracksQA.globalIndex() :: "<<trackQA.trackId()<<" !=  "<<track_From_TracksQA.globalIndex();
+          }
+        }
+    }
+/*    // if(dfCount > 10) {return;}
     LOG(info)<<"DEBUG :: df_"<<dfCount<<" :: DF_"<<Origins.iteratorAt(0).dataframeID();
     LOG(info)<<"DEBUG :: df_"<<dfCount<<" :: BCs.size()           = "<<BCs.size();
     LOG(info)<<"DEBUG :: df_"<<dfCount<<" :: occTables.size()     = "<<occTables.size();
@@ -170,7 +242,7 @@ struct occupancyTableConsumer{
     LOG(info)<<"DEBUG :: trackWithCollisionButNoOccs = "<<trackWithCollisionButNoOccs;
     LOG(info)<<"DEBUG :: total Tracks = "<<tracks.size()<<" :: "<<(trackWithCollisionButNoOccs+trackWithoutCollision+trackMeanOccs.size());
     LOG(info)<<"DEBUG :: ";
-
+*/
   }//Process function ends
 
 };
